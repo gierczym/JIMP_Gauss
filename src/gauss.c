@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define EPSILON 0.00000001
 
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
@@ -12,81 +11,46 @@
  *
 **/
 
-
-int eliminate(Matrix *mat, Matrix *b){
-	//
-	/*============================================*/
-	/* sprawdzam poprawnosc rozmiarow macierzy    */
-	/*============================================*/
-	//
-	// 1. czy mat kwadratowa
-	if( mat->r != mat->c ) {
-		fprintf( stderr, "[!] gauss.c/eliminate: macierz A nie jest kwadratowa\n" );
-		return 2;
+void norm_row(Matrix *mat, Matrix *b, int row2norm, int row2benorm, double normaliser){
+	for(int i = 0; i < mat -> c; i++){
+		mat -> data[row2benorm][i] += normaliser * mat -> data[row2norm][i];
 	}
-	//
-	// 2. czy b ma prawidlowy rozmiar
-	if( (b->r != mat->r) ||
-	    (b->c != 1) )  {
-		fprintf( stderr, "[!] gauss.c/eliminate: macierz b ma nieprawidlowy rozmiar\n" );
-		return 2;
-	 }
-	//
-	/*=========================================*/
-	/* przeksztalcam macierz na dolnotrojkatna */
-	/*=========================================*/
-	//
-	int ir;
-	int ir_aux;
-	int ir_swap;
-	int ic;
-	double val_max;
-	double tmp;
+	b -> data[row2benorm][0] += normaliser * b -> data[row2norm][0];
+}
 
-	//
-	// najpierw sortuje wiersze
-	for( ir = 0; ir < mat->r; ir++ ) {
-		//
-		// szukam wiersza z elementem o najwiekszym module w kolumnie ir-tej
-		val_max = fabs( mat->data[ir][ir] );
-		ir_swap = ir;
-		for( ir_aux = ir+1; ir_aux < mat->r; ir_aux++ )
-			if( fabs(mat->data[ir_aux][ir]) > val_max ) {
-				val_max = fabs(mat->data[ir_aux][ir]);
-				ir_swap = ir_aux;
-			}
-		//
-		if( val_max < EPSILON ) {
-			fprintf( stderr, "[!] gauss.c/eliminate: zero na diagonali, same elementy zerowe w kolumnie %d-tej ponizej badanego wiersza\n", ir+1 );
-			return 1;
-		}	
-		//
-		// jesli znalazlem wiersz o wiekszym elemencie w badanej kolumnie to zamieniam wiersze
-		if( ir_swap != ir ) {
-			for( ic = 0; ic < mat->c; ic++ ) {
-				tmp = mat->data[ir][ic];
-				mat->data[ir][ic] = mat->data[ir_swap][ic];
-				mat->data[ir_swap][ic] = tmp;
-			}
-			tmp = b->data[ir][0];
-			b->data[ir][0] = b->data[ir_swap][0];
-			b->data[ir_swap][0] = tmp;
-		}
-			
-	}
-	//
-	// teraz robie macierz dolnotrojkatna
-	double fac;
-	for( ir = 0; ir < mat->r; ir++ ) {
-		for( ir_aux = ir+1; ir_aux < mat->r; ir_aux++ ) {
-			fac = mat->data[ir_aux][ir] / mat->data[ir][ir];
-			for( ic = 0; ic < mat->c; ic ++ )
-				mat->data[ir_aux][ic] -= fac * mat->data[ir][ic];
-			b->data[ir_aux][0] -= fac * b->data[ir][0];
+void replace_rows(Matrix *mat, int r1, int r2){
+	double *tmp = mat -> data[r1];
+	mat -> data[r1] = mat -> data[r2];
+	mat -> data[r2] = tmp;
+}
+
+int select_master_elem(Matrix *A, Matrix *b, int col){
+	int max_elem_row_index = -1;
+	double max_elem_val = 0;
+	for(int i = col; i < A -> r; i++){
+		if(fabs(A -> data[i][col]) > max_elem_val){
+			max_elem_val = fabs(A -> data[i][col]);
+			max_elem_row_index = i;
 		}
 	}
-
+	if(max_elem_val == 0){
+		printf("[!] select_master_elem: wszystkie wiersze w kolumnie %d od diagonali w dół mają współczynniki równe zero\n", col);
+		return 1;
+	}
+	replace_rows(A, col, max_elem_row_index);
+	replace_rows(b, col, max_elem_row_index);
 	return 0;
 }
 
-
+int eliminate(Matrix *mat, Matrix *b){
+	double dodajnik = 0;
+	for(int i = 0; i < mat -> c; i++){ // zamienia macierz na dolnotrójkątną
+		if(select_master_elem(mat, b, i) == 1)
+			return 1;
+		for(int j = i+1; j < mat -> r; j++){
+			dodajnik = -1 * (mat -> data[j][i]/mat -> data[i][i]);
+			norm_row(mat, b, i, j, dodajnik);
+		}
+	}
+	return 0;
+}
