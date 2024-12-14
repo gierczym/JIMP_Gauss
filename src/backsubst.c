@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "backsubst.h"
 
+#define EPSILON 0.00000001
 
 /* SCIAGAWKA
 typedef struct _Matrix {
@@ -44,10 +46,15 @@ int  backsubst(Matrix *x, Matrix *mat, Matrix *b) {
 		return 2;
 	 }
 
-	for( ir = mat->r-1; ir >=0; ir-- ) {
-		tmp = b->data[ir][0];
-		for( ic = mat->c-1; ic > ir; ic-- )
+	for( ir = mat->r-1; ir >=0; ir-- ) { // podstawienie wsteczne, zaczynam od ostatniego wiersza
+		tmp = b->data[ir][0]; // zachowuje wartosc b dla danego wiersza
+		for( ic = mat->c-1; ic > ir; ic-- ){
+			if( fabs(mat->data[ir][ic]) < EPSILON ) {
+				printf( "[?] wykryto element zero powyzej diagonali, [wiersz: %d] [kolumna %d]\n", ir+1, ic+1 );
+				continue;
+			}
 			tmp -= x->data[ir][0] / mat->data[ir][ic];
+		}
 		x->data[ir][0] = tmp / mat->data[ir][ir];
 	}
 
