@@ -31,6 +31,28 @@ int is_matrix_singular(Matrix *mat){
 }
 
 int eliminate(Matrix *mat, Matrix *b){
+	//
+	/*============================================*/
+	/* sprawdzam poprawnosc rozmiarow macierzy    */
+	/*============================================*/
+	//
+	// 1. czy mat kwadratowa
+	if( mat->r != mat->c ) {
+		fprintf( stderr, "[!] gauss.c/eliminate: macierz A nie jest kwadratowa\n" );
+		return 2;
+	}
+	//
+	// 2. czy b ma prawidlowy rozmiar
+	if( (b->r != mat->r) ||
+	    (b->c != 1) )  {
+		fprintf( stderr, "[!] gauss.c/eliminate: macierz b ma nieprawidlowy rozmiar\n" );
+		return 2;
+	 }
+	//
+	/*=========================================*/
+	/* przeksztalcam macierz na dolnotrojkatna */
+	/*=========================================*/
+	//
 	double dodajnik = 0;
 	if(is_matrix_singular(mat) == 1)
 		return 1;
