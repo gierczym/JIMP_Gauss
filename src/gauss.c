@@ -25,7 +25,6 @@ void replace_rows(Matrix *mat, int r1, int r2){
 }
 
 int select_master_elem(Matrix *A, Matrix *b, int col){
-	printToScreen(A);
 	int max_elem_row_index = -1;
 	double max_elem_val = 0.0;
 	for(int i = col; i < A -> r; i++){
@@ -40,7 +39,6 @@ int select_master_elem(Matrix *A, Matrix *b, int col){
 	}
 	replace_rows(A, col, max_elem_row_index);
 	replace_rows(b, col, max_elem_row_index);
-	printToScreen(A);
 	return 0;
 }
 
