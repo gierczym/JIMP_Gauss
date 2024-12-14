@@ -12,27 +12,6 @@
  *
 **/
 
-void norm_row(Matrix *mat, Matrix *b, int row2norm, int row2benorm, double normaliser){
-	for(int i = 0; i < mat -> c; i++){
-		mat -> data[row2benorm][i] += normaliser * mat -> data[row2norm][i];
-	}
-	
-	b -> data[row2benorm][0] += normaliser * b -> data[row2norm][0];
-}
-void fetch_results(Matrix *mat, Matrix *b){
-	for(int i = 0; i < mat -> c; i++){
-		b -> data[i][0] = b -> data[i][0] / mat -> data[i][i];
-	}
-}
-int is_matrix_singular(Matrix *mat){
-	if(mat -> r != mat -> c) //sprawdza, czy macierz jest kwadratowa
-		return 1;
-	for(int i = 0; i < mat -> c; i++){ //sprawdza, czy na diagonali jest 0
-		if(mat -> data[i][i] == 0)
-			return 1;
-	}
-	return 0;
-}
 
 int eliminate(Matrix *mat, Matrix *b){
 	//
