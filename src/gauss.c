@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-
+#define epsilon 0.0000001
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
@@ -25,20 +25,22 @@ void replace_rows(Matrix *mat, int r1, int r2){
 }
 
 int select_master_elem(Matrix *A, Matrix *b, int col){
+	printToScreen(A);
 	int max_elem_row_index = -1;
-	double max_elem_val = 0;
+	double max_elem_val = 0.0;
 	for(int i = col; i < A -> r; i++){
 		if(fabs(A -> data[i][col]) > max_elem_val){
 			max_elem_val = fabs(A -> data[i][col]);
 			max_elem_row_index = i;
 		}
 	}
-	if(max_elem_val == 0){
+	if(max_elem_val > -1 * epsilon && max_elem_val < epsilon){
 		printf("[!] select_master_elem: wszystkie wiersze w kolumnie %d od diagonali w dół mają współczynniki równe zero\n", col);
 		return 1;
 	}
 	replace_rows(A, col, max_elem_row_index);
 	replace_rows(b, col, max_elem_row_index);
+	printToScreen(A);
 	return 0;
 }
 
