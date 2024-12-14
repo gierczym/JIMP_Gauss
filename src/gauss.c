@@ -78,7 +78,7 @@ int eliminate(Matrix *mat, Matrix *b){
 			}
 		//
 		if( val_max < EPSILON ) {
-			fprintf( stderr, "[!] gauss.c/eliminate: same elementy zerowe w kolumnie %d-tej ponizej badanego wiersza\n", ir+1 );
+			fprintf( stderr, "[!] gauss.c/eliminate: zero na diagonali, same elementy zerowe w kolumnie %d-tej ponizej badanego wiersza\n", ir+1 );
 			return 1;
 		}	
 		//
@@ -95,6 +95,18 @@ int eliminate(Matrix *mat, Matrix *b){
 		}
 			
 	}
+	//
+	// teraz robie macierz dolnotrojkatna
+	double fac;
+	for( ir = 0; ir < mat->r; ir++ ) {
+		for( ir_aux = ir+1; ir_aux < mat->r; ir_aux++ ) {
+			fac = mat->data[ir_aux][ir] / mat->data[ir][ir];
+			for( ic = 0; ic < mat->c; ic ++ )
+				mat->data[ir_aux][ic] -= fac * mat->data[ir][ic];
+			b->data[ir_aux][0] -= fac * b->data[ir][0];
+		}
+	}
+
 	return 0;
 }
 
