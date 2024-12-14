@@ -21,6 +21,8 @@ int main(int argc, char ** argv) {
 	if (x != NULL) {
 		res = backsubst(x,A,b);
 
+		printToScreen(A);
+		printToScreen(b);
 		printToScreen(x);
 	  freeMatrix(x);
 	} else {
