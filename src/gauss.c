@@ -40,12 +40,6 @@ int eliminate(Matrix *mat, Matrix *b){
 			norm_row(mat, b, i, j, dodajnik);
 		}
 	}
-	for(int i = mat -> c-1; i > 0; i--){ //zamienia macierz z dolnotrójątnej na diagonalną
-		for(int j = i-1; j >= 0; j--){
-			dodajnik = -1 * (mat -> data[j][i]/mat -> data[i][i]);
-			norm_row(mat, b, i, j, dodajnik);
-		}
-	}
 	fetch_results(mat, b);
 	return 0;
 }
