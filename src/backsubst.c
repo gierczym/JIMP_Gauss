@@ -55,6 +55,10 @@ int  backsubst(Matrix *x, Matrix *mat, Matrix *b) {
 			}
 			tmp -= x->data[ir][0] / mat->data[ir][ic];
 		}
+		if( fabs(mat->data[ir][ir]) < EPSILON ) {
+			fprintf( stderr, "[!] backsubst: wyryto zero na diagonali\n" );
+			return 1;
+		}
 		x->data[ir][0] = tmp / mat->data[ir][ir];
 	}
 
