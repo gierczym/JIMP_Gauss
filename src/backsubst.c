@@ -2,6 +2,17 @@
 #include <stdlib.h>
 
 #include "backsubst.h"
+
+
+/* SCIAGAWKA
+typedef struct _Matrix {
+	int r;
+	int c;
+	double **data;
+} Matrix;
+*/
+
+
 /**
  * Zwraca 0 - wsteczne podstawienie zakonczone sukcesem
  * Zwraca 1 - błąd dzielenia przez 0 (element na diagonali = 0)
@@ -12,6 +23,26 @@ int  backsubst(Matrix *x, Matrix *mat, Matrix *b) {
 	int ir;
 	int ic;
 	double tmp;
+
+	//
+	/*============================================*/
+	/* sprawdzam poprawnosc rozmiarow macierzy    */
+	/*============================================*/
+	//
+	// 1. czy mat kwadratowa
+	if( mat->r != mat->c ) {
+		fprintf( stderr, "[!] backsubst: macierz A nie jest kwadratowa\n" );
+		return 2;
+	}
+	//
+	// 2. czy b oraz x maja prawidlowy rozmiar
+	if( (x->r != mat->r) ||
+	    (x->c != 1)      ||
+            (b->r != mat->r) ||
+	    (b->c != 1) )  {
+		fprintf( stderr, "[!] backsubst: macierz b lub x ma nieprawidlowy rozmiar\n" );
+		return 2;
+	 }
 
 	for( ir = mat->r-1; ir >=0; ir-- ) {
 		tmp = b->data[ir][0];

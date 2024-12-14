@@ -1,9 +1,11 @@
 #ifndef _MAT_IO_H
 #define _MAT_IO_H
 
+
 typedef struct _Matrix {
-				int r,c;
-				double **data;
+	int r;
+	int c;
+	double **data;
 } Matrix;
 
 /**
