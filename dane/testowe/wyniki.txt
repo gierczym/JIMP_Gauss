@@ -1,0 +1,6 @@
+test 1 (nieosobliwa macierz 2x2 i 5x5): dobrze 
+test 2 (element 1x1 (na diagonali) jest równy 0): dobrze
+test 3 (macierz osobliwa): średnio: jest błąd ale przydałoby się zrobić żeby był taki mówiłacy o osobliwości macierzy
+test 4_1 (macierz podana nie jako jeden wiersz, tylko każdy wiersz pod sobą): dobrze (działa)
+test 4_2 (zbyt dużo elementów macierzy): średnio: program bierze potrzebne elementy od początku, a resztę ignoruje
+test 4_3 (zbyt mało elementów macierzy): dobrze: program wypełnia zerami brakujące elementy
