@@ -49,14 +49,10 @@ int  backsubst(Matrix *x, Matrix *mat, Matrix *b) {
 	for( ir = mat->r-1; ir >=0; ir-- ) { // podstawienie wsteczne, zaczynam od ostatniego wiersza
 		tmp = b->data[ir][0]; // zachowuje wartosc b dla danego wiersza
 		for( ic = mat->c-1; ic > ir; ic-- ){
-			if( fabs(mat->data[ir][ic]) < EPSILON ) {
-				printf( "[?] wykryto element zero powyzej diagonali, [wiersz: %d] [kolumna %d]\n", ir+1, ic+1 );
-				continue;
-			}
-			tmp -= x->data[ir][0] / mat->data[ir][ic];
+			tmp -= x->data[ic][0] * mat->data[ir][ic];
 		}
 		if( fabs(mat->data[ir][ir]) < EPSILON ) {
-			fprintf( stderr, "[!] backsubst: wyryto zero na diagonali\n" );
+			fprintf( stderr, "[!] backsubst: wykryto zero na diagonali\n" );
 			return 1;
 		}
 		x->data[ir][0] = tmp / mat->data[ir][ir];
