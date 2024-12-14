@@ -2,6 +2,10 @@
 #include "mat_io.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
+#define EPSILON 0.00000001
+
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
@@ -53,16 +57,44 @@ int eliminate(Matrix *mat, Matrix *b){
 	/* przeksztalcam macierz na dolnotrojkatna */
 	/*=========================================*/
 	//
-	double dodajnik = 0;
-	if(is_matrix_singular(mat) == 1)
-		return 1;
-	for(int i = 0; i < mat -> c; i++){ // zamienia macierz na dolnotrójkątną
-		for(int j = i+1; j < mat -> r; j++){
-			dodajnik = -1 * (mat -> data[j][i]/mat -> data[i][i]);
-			norm_row(mat, b, i, j, dodajnik);
+	int ir;
+	int ir_aux;
+	int ir_swap;
+	int ic;
+	double val_max;
+	double tmp;
+
+	//
+	// najpierw sortuje wiersze
+	for( ir = 0; ir < mat->r; ir++ ) {
+		//
+		// szukam wiersza z elementem o najwiekszym module w kolumnie ir-tej
+		val_max = fabs( mat->data[ir][ir] );
+		ir_swap = ir;
+		for( ir_aux = ir+1; ir_aux < mat->r; ir_aux++ )
+			if( fabs(mat->data[ir_aux][ir]) > val_max ) {
+				val_max = fabs(mat->data[ir_aux][ir]);
+				ir_swap = ir_aux;
+			}
+		//
+		if( val_max < EPSILON ) {
+			fprintf( stderr, "[!] gauss.c/eliminate: same elementy zerowe w kolumnie %d-tej ponizej badanego wiersza\n", ir+1 );
+			return 1;
+		}	
+		//
+		// jesli znalazlem wiersz o wiekszym elemencie w badanej kolumnie to zamieniam wiersze
+		if( ir_swap != ir ) {
+			for( ic = 0; ic < mat->c; ic++ ) {
+				tmp = mat->data[ir][ic];
+				mat->data[ir][ic] = mat->data[ir_swap][ic];
+				mat->data[ir_swap][ic] = tmp;
+			}
+			tmp = b->data[ir][0];
+			b->data[ir][0] = b->data[ir_swap][0];
+			b->data[ir_swap][0] = tmp;
 		}
+			
 	}
-	fetch_results(mat, b);
 	return 0;
 }
 
