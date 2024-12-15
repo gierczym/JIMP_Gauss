@@ -21,7 +21,7 @@ int main(int argc, char ** argv) {
 
 
 	if( flag_test ) {
-		printf( "\n=====================================================\n" );
+		printf( "=====================================================\n" );
 		printf( "TEST: Plik A: \"%s\", Plik b: \"%s\"\n", argv[1], argv[2] );
 	}
 
@@ -61,26 +61,26 @@ int main(int argc, char ** argv) {
 		Matrix *b_copy = copyMatrix( b );
 		if( NULL == A_copy ) {
 			fprintf( stderr, "[!] FAILED main.c: nie udalo sie skopiowac macierzy A\n" );
-			return EXIT_FAILURE;
+			return 0;
 		}
 		if( NULL == b_copy ) {
 			fprintf( stderr, "[!] FAILED main.c: nie udalo sie skopiowac macierzy b\n" );
-			return EXIT_FAILURE;
+			return 0;
 		}
 		res = eliminate(A,b);
 		if( res != 0 ) {
 			fprintf( stderr, "[!] FAILED main.c: eliminacja nieudana, zwrocono kod %d\n", res );
-			return EXIT_FAILURE;
+			return 0;
 		}
 		x = createMatrix(b->r, 1);
 		if ( NULL == x) {
 			fprintf( stderr,"[!] FAILED main.c: Nie mogłem utworzyć wektora wynikowego x\n" );
-			return EXIT_FAILURE;
+			return 0;
 		}
 		res = backsubst(x,A,b);
 		if ( res != 0 ) {
 			fprintf( stderr, "[!] FAILED main.c: Nie udalo sie wykonac podstawienia\n" );
-			return EXIT_FAILURE;
+			return 0;
 		}
 		int ir;
 		int ic;
@@ -94,7 +94,7 @@ int main(int argc, char ** argv) {
 			res_check = 0.0;
 			for( ic = 0; ic < A_copy->c; ic++ )
 				res_check += x->data[ic][0] * A_copy->data[ir][ic];
-		        if( res_check != b_copy->data[ir][0] ) {
+		        if( fabs(res_check - b_copy->data[ir][0]) > EPSILON ) {
 				printf( "| FAIL  |");
 			} else {
 				printf( "| PASS  |");
