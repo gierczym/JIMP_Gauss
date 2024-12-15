@@ -26,8 +26,6 @@ void replace_rows(Matrix *mat, int r1, int r2){
 	mat -> data[r2] = tmp;
 }
 int checkLastRow(Matrix *A, Matrix *b){
-	printToScreen(A);
-	printToScreen(b);
 	for(int i = 0; i < A -> c; i++){
 		if(fabs(A -> data[A -> r-1][i]) > epsilon)
 			return 0;
