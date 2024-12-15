@@ -85,20 +85,22 @@ int main(int argc, char ** argv) {
 		int ir;
 		int ic;
 		double res_check;
-		printf( "------------------------------------\n" );
-		printf( "| Sprawdzam poprawnosc wyniku:     |\n" );
-		printf( "------------------------------------\n" );
+		printf( "---------------------------------------\n" );
+		printf( "| Sprawdzam poprawnosc wyniku:        |\n" );
+		printf( "---------------------------------------\n" );
 		printf( "| wynik | zmienna | powinno |   jest  |\n");
+		printf( "---------------------------------------\n" );
 		for( ir = 0; ir < x->r; ir++ ) { // sprawdzanie poprawnosci wyniku
 			res_check = 0.0;
 			for( ic = 0; ic < A_copy->c; ic++ )
-				res_check += x->data[ir][0] * A_copy->data[ir][ic];
+				res_check += x->data[ic][0] * A_copy->data[ir][ic];
 		        if( res_check != b_copy->data[ir][0] ) {
 				printf( "| FAIL  |");
 			} else {
 				printf( "| PASS  |");
 			}	
 			printf( " x%-6d | %7g | %7g |\n", ir+1, b_copy->data[ir][0], res_check );		
+			printf( "---------------------------------------\n" );
 		}
 
 		freeMatrix(x);
