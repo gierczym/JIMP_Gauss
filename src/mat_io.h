@@ -16,6 +16,9 @@ Matrix * readFromFile(char * fname);
 void printToScreen(Matrix *mat);
 
 Matrix * createMatrix(int r, int c);
+
+Matrix * copyMatrix( Matrix *mat );
+
 void freeMatrix(Matrix *mat);
 
 #endif

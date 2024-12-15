@@ -59,6 +59,22 @@ Matrix * createMatrix(int r, int c) {
 		return mat;
 }
 
+Matrix * copyMatrix( Matrix *mat ) {
+	Matrix *mat_copy = createMatrix( mat->r, mat->c );
+	if( NULL == mat_copy ) {
+		fprintf( stderr, "[!] copyMatrix: nie udalo sie zaalokowac pamieci na kopie macierzy\n" );
+		return NULL;
+	}
+	int ir;
+	int ic;
+	for( ir = 0; ir < mat->r; ir++ ) {
+		for( ic = 0; ic < mat->c; ic++ ) {
+			mat_copy->data[ir][ic] = mat->data[ir][ic];
+		}
+	}
+	return mat_copy;
+}
+
 void freeMatrix(Matrix * mat) {
   int i;
 	for (i=0;i < mat->r; i++)

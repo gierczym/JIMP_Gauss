@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
+#define EPSILON 0.00000001
 
 int main(int argc, char ** argv) {
 	int res;
@@ -24,23 +26,19 @@ int main(int argc, char ** argv) {
 	}
 
 	if (A == NULL) {
-		if( flag_test )
-			printf( "[!] FAILED: nie udalo sie wczytac macierzy A\n");
+		printf( "[!] FAILED: nie udalo sie wczytac macierzy A\n");
 		return -1;
 	}
 	if (b == NULL) {
-		if( flag_test )
-			printf( "[!] FAILED: nie udalo sie wczytac macierzy b\n");
+		printf( "[!] FAILED: nie udalo sie wczytac macierzy b\n");
 	       	return -2;
 	}
+
 
 	if( !flag_test ) {
 		printf( "Wczytane dane:\n" );
 		printToScreen(A);
 		printToScreen(b);
-	}
-
-	if( !flag_test ) {
 		res = eliminate(A,b);
 		if( res != 0 ) {
 			fprintf( stderr, "[!] main.c: eliminacja nieudana, zwrocono kod %d\n", res );
@@ -59,7 +57,16 @@ int main(int argc, char ** argv) {
 		}
 	} else {
 		printf( "PASSED - wczytywanie danych - Macierz A [%dx%d], macierz b [%dx%d]\n", A->r, A->c, b->r, b->c );
-		
+		Matrix *A_copy = copyMatrix( A );
+		Matrix *b_copy = copyMatrix( b );
+		if( NULL == A_copy ) {
+			fprintf( stderr, "[!] FAILED main.c: nie udalo sie skopiowac macierzy A\n" );
+			return EXIT_FAILURE;
+		}
+		if( NULL == b_copy ) {
+			fprintf( stderr, "[!] FAILED main.c: nie udalo sie skopiowac macierzy b\n" );
+			return EXIT_FAILURE;
+		}
 		res = eliminate(A,b);
 		if( res != 0 ) {
 			fprintf( stderr, "[!] FAILED main.c: eliminacja nieudana, zwrocono kod %d\n", res );
@@ -74,6 +81,24 @@ int main(int argc, char ** argv) {
 		if ( res != 0 ) {
 			fprintf( stderr, "[!] FAILED main.c: Nie udalo sie wykonac podstawienia\n" );
 			return EXIT_FAILURE;
+		}
+		int ir;
+		int ic;
+		double res_check;
+		printf( "------------------------------------\n" );
+		printf( "| Sprawdzam poprawnosc wyniku:     |\n" );
+		printf( "------------------------------------\n" );
+		printf( "| wynik | zmienna | powinno |   jest  |\n");
+		for( ir = 0; ir < x->r; ir++ ) { // sprawdzanie poprawnosci wyniku
+			res_check = 0.0;
+			for( ic = 0; ic < A_copy->c; ic++ )
+				res_check += x->data[ir][0] * A_copy->data[ir][ic];
+		        if( res_check != b_copy->data[ir][0] ) {
+				printf( "| FAIL  |");
+			} else {
+				printf( "| PASS  |");
+			}	
+			printf( " x%-6d | %7g | %7g |\n", ir+1, b_copy->data[ir][0], res_check );		
 		}
 
 		freeMatrix(x);
