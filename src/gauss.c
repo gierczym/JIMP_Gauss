@@ -58,10 +58,10 @@ int eliminate(Matrix *mat, Matrix *b){
 	for(int i = 0; i < mat -> c; i++){ // zamienia macierz na dolnotrójkątną
 		switch (checkLastRow(mat, b)){
 			case 1:
-				printf("[!] elimitane: podana macierz jest osobliwa");
+				printf("[!] elimitane: podana macierz jest osobliwa\n");
 				return 1;
 			case 2:
-				printf("[!] elimitane: podana macierz jest sprzeczna");
+				printf("[!] elimitane: podana macierz jest sprzeczna\n");
 				return 2;
 		}
 		if(select_master_elem(mat, b, i) == 1)
