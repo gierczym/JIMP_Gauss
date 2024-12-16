@@ -24,3 +24,6 @@ test: all
 	@echo "OCZEKIWANIE: (zbyt mało elementów macierzy): Program powinien to wykryc i powiadomic uzytkownika o niewlasciwym rozmiarze."
 	@bin/gauss dane/A_4_3 dane/b_4_3 -t
 	@echo
+	@echo "OCZEKIWANIE: (macierz sprzeczna): Program powinien to wykryc i powiadomic uzytkownika."
+	@bin/gauss dane/A_5 dane/b_5 -t
+	@echo
