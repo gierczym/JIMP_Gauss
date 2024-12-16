@@ -9,30 +9,30 @@
 #define EPSILON 0.00000001
 
 int main(int argc, char ** argv) {
-	int res;
-	Matrix * A = readFromFile(argv[1]);
-	Matrix * b = readFromFile(argv[2]);
-	Matrix * x;
-	
 	int flag_test = 0; // set to 1 when program called with -t flag as third argument
 
 	if( (argc > 3) && (0 == strcmp("-t", argv[3])) )
 		flag_test = 1;
-
 
 	if( flag_test ) {
 		printf( "=====================================================\n" );
 		printf( "TEST: Plik A: \"%s\", Plik b: \"%s\"\n", argv[1], argv[2] );
 	}
 
+
+	int res;
+	Matrix * A = readFromFile(argv[1]);
 	if (A == NULL) {
-		printf( "[!] FAILED: nie udalo sie wczytac macierzy A\n");
-		return -1;
+		printf( "[!] FAILED main.c: nie udalo sie wczytac macierzy A\n");
+		return 1-flag_test;
 	}
+	Matrix * b = readFromFile(argv[2]);
 	if (b == NULL) {
-		printf( "[!] FAILED: nie udalo sie wczytac macierzy b\n");
-	       	return -2;
+		printf( "[!] FAILED main.c: nie udalo sie wczytac macierzy b\n");
+	       	return 2-2*flag_test;
 	}
+	Matrix * x;
+	
 
 
 	if( !flag_test ) {
